@@ -61,7 +61,7 @@ namespace API.Server.Controllers
             // Gọi phương thức LogoutAsync từ IAccountService
             await _accountService.LogoutAsync();
 
-            // Trả về kết quả thành công 1
+            // Trả về kết quả thành công 
             return Ok("Logout successful.");
         }
     }
