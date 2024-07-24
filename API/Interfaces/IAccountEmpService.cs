@@ -1,5 +1,7 @@
 using API.Server.DTOs.Account;
 using API.Server.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace API.Server.Interfaces
 {
@@ -20,5 +22,11 @@ namespace API.Server.Interfaces
 
         // Phương thức thêm tài khoản mới
         Task AddAsync(AccountEmp accountEmp);
+
+        // Phương thức GET tất cả người dùng
+        Task<IEnumerable<AccountEmp>> GetAllAsync();
+
+        // Phương thức GET người dùng theo ID
+        Task<AccountEmp> GetByIdAsync(int id);
     }
 }

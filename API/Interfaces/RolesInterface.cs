@@ -3,13 +3,12 @@ using API.Server.Models;
 
 namespace API.Server.Interfaces
 {
-    public interface RolesInterface
+    public interface IRoleService
     {
-        Task<List<Role>> GetAllAsync();
-        Task<Role?> GetByIdAsync(int id);
-        Task<Role> CreateAsync(Role roleModel);
-        Task<Role?> UpdateAsync(int id, UpdateRolesRequersDto roleDto);
-        Task<Role?> DeleteAsync(int id);
-        Task<bool> RoleExists(int id);
+        Task<IEnumerable<Role>> GetAllRolesAsync();
+        Task<Role> GetRoleByIdAsync(int id);
+        Task<(bool Succeeded, string ErrorMessage)> CreateRoleAsync(CreateRoleDto roleDto);
+        Task<(bool Succeeded, string ErrorMessage)> UpdateRoleAsync(int id, UpdateRoleDto roleDto);
+        Task<(bool Succeeded, string ErrorMessage)> DeleteRoleAsync(int id);
     }
 }

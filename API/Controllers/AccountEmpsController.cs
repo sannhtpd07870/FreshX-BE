@@ -64,5 +64,25 @@ namespace API.Server.Controllers
             // Trả về kết quả thành công
             return Ok("Logout successful.");
         }
+
+        // API GET tất cả người dùng
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var users = await _accountService.GetAllAsync();
+            return Ok(users);
+        }
+
+        // API GET người dùng theo ID
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var user = await _accountService.GetByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
     }
 }

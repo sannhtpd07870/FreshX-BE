@@ -2,12 +2,9 @@
 
 namespace API.Server.DTOs.RolesDTO
 {
-    public class CreateRolesRequersDto
+    public class UpdateRoleDto
     {
-        [Required, MaxLength(50)]
+        [Required]
         public string RoleName { get; set; }
-
-        [MaxLength(200)]
-        public string Description { get; set; }
     }
 }
