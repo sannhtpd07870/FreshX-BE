@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      dotnet: 8.0 # hoặc phiên bản .NET mà bạn đang sử dụng
+      dotnet: 8.0
   pre_build:
     commands:
       - echo Restoring dependencies...
@@ -12,6 +12,8 @@ phases:
     commands:
       - echo Building the project...
       - dotnet build repository.sln --configuration Release
+      - echo Publishing the project...
+      - dotnet publish repository.sln --configuration Release --output ./publish
   post_build:
     commands:
       - echo Running tests...
@@ -20,5 +22,5 @@ phases:
 artifacts:
   files:
     - '**/*'
+  base-directory: 'publish'  # Đường dẫn đến thư mục xuất bản sau khi publish
   discard-paths: yes
-  base-directory: 'API/bin/Release/net8.0/publish' # Đường dẫn đến thư mục xuất bản
