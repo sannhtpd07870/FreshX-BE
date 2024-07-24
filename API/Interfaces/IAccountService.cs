@@ -7,10 +7,10 @@ namespace API.Server.Interfaces
     public interface IAccountService
     {
         // Phương thức để đăng ký tài khoản mới
-        Task<(bool Succeeded, string ErrorMessage)> RegisterAsync(RegisterDto registerDto);
+        Task<(bool Succeeded, string ErrorMessage)> RegisterAsync(RegisterEmpDto registerDto);
 
         // Phương thức để đăng nhập và trả về token JWT nếu thành công
-        Task<(bool Succeeded, string Token, string ErrorMessage)> LoginAsync(LoginDto loginDto);
+        Task<(bool Succeeded, string Token, string ErrorMessage)> LoginAsync(LoginEmpDto loginDto);
 
         // Phương thức để đăng xuất
         Task LogoutAsync();

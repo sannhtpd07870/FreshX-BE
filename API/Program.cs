@@ -65,7 +65,7 @@ internal class Program
         builder.Services.AddHttpClient(); // Đăng ký HttpClient cho DI container
 
         // Register services and repositories
-        builder.Services.AddScoped<IAccountEmpService, AccountService>(); // Đăng ký dịch vụ AccountService
+        builder.Services.AddScoped<IAccountEmpService, AccountEmpService>(); // Đăng ký dịch vụ AccountService
 
         // Add controllers and Swagger
         builder.Services.AddControllers(); // Đăng ký các controller

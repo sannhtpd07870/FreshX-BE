@@ -1,56 +1,47 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using API.Server.Interfaces;
+﻿using API.DTOs.AccountEmp;
 using API.Server.DTOs.Account;
+using API.Server.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace API.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountEmpController : ControllerBase
     {
         private readonly IAccountEmpService _accountService;
 
-        public AccountController(IAccountEmpService accountService)
+        public AccountEmpController(IAccountEmpService accountService)
         {
             _accountService = accountService;
         }
 
         // API endpoint cho đăng ký người dùng mới
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+        public async Task<IActionResult> Register([FromBody] RegisterEmpDto registerDto)
         {
-            // Kiểm tra dữ liệu đầu vào
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Gọi phương thức RegisterAsync từ IAccountService
             var (succeeded, errorMessage) = await _accountService.RegisterAsync(registerDto);
-
-            // Kiểm tra kết quả đăng ký
             if (!succeeded)
                 return BadRequest(errorMessage);
 
-            // Trả về kết quả thành công
             return Ok("User registered successfully.");
         }
 
         // API endpoint cho đăng nhập người dùng
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginEmpDto loginDto)
         {
-            // Kiểm tra dữ liệu đầu vào
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Gọi phương thức LoginAsync từ IAccountService
             var (succeeded, token, errorMessage) = await _accountService.LoginAsync(loginDto);
-
-            // Kiểm tra kết quả đăng nhập
             if (succeeded)
                 return Ok(new { Token = token });
 
-            // Trả về lỗi nếu đăng nhập thất bại
             return BadRequest(errorMessage);
         }
 
@@ -58,11 +49,36 @@ namespace API.Server.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            // Gọi phương thức LogoutAsync từ IAccountService
             await _accountService.LogoutAsync();
-
-            // Trả về kết quả thành công
             return Ok("Logout successful.");
+        }
+
+        // API endpoint cho quên mật khẩu
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var (succeeded, errorMessage) = await _accountService.ForgotPasswordAsync(forgotPasswordDto);
+            if (!succeeded)
+                return BadRequest(errorMessage);
+
+            return Ok("Password reset instructions sent to your email.");
+        }
+
+        // API endpoint cho đặt lại mật khẩu
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var (succeeded, errorMessage) = await _accountService.ResetPasswordAsync(resetPasswordDto);
+            if (!succeeded)
+                return BadRequest(errorMessage);
+
+            return Ok("Password reset successful.");
         }
     }
 }

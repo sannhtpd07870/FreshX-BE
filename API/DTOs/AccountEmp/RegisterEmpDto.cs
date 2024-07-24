@@ -1,10 +1,15 @@
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 
 namespace API.Server.DTOs.Account
 {
-    public class LoginDto
+    public class RegisterEmpDto
     {
-        public string UserName { get; set; }
+        [Required]
         public string Password { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
     }
 }
