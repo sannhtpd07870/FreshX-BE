@@ -9,9 +9,9 @@ namespace API.Server.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IAccountService _accountService;
+        private readonly IAccountEmpService _accountService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountEmpService accountService)
         {
             _accountService = accountService;
         }
@@ -61,7 +61,7 @@ namespace API.Server.Controllers
             // Gọi phương thức LogoutAsync từ IAccountService
             await _accountService.LogoutAsync();
 
-            // Trả về kết quả thành công 1
+            // Trả về kết quả thành công
             return Ok("Logout successful.");
         }
     }

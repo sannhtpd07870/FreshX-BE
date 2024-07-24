@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using API.Server.DTOs.Account;
 using API.Server.Interfaces;
 using API.Server.Models;
+using API.Services;
 
 namespace API.Server.Services
 {
-    public class AccountService : IAccountService
+    public class AccountService : IAccountEmpService
     {
-        private readonly JwtTokenService _jwtTokenService;
+        private readonly IJwtTokenService _jwtTokenService;
         private readonly List<AccountEmp> _users; // Danh sách giả lập người dùng
 
-        public AccountService(JwtTokenService jwtTokenService)
+        public AccountService(IJwtTokenService jwtTokenService)
         {
             _jwtTokenService = jwtTokenService;
             _users = new List<AccountEmp>(); // Khởi tạo danh sách người dùng giả lập
@@ -32,7 +33,7 @@ namespace API.Server.Services
             var user = new AccountEmp
             {
                 Username = registerDto.Email,
-                Password = registerDto.Password, // Cần mã hóa mật khẩu trong thực tế
+                Password = BCrypt.Net.BCrypt.HashPassword(registerDto.Password), // Mã hóa mật khẩu
                 Email = registerDto.Email,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
@@ -52,13 +53,13 @@ namespace API.Server.Services
             var user = _users.SingleOrDefault(u => u.Username == loginDto.UserName);
 
             // Kiểm tra thông tin đăng nhập
-            if (user == null || user.Password != loginDto.Password) // Cần kiểm tra mật khẩu mã hóa trong thực tế
+            if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password)) // Kiểm tra mật khẩu đã mã hóa
             {
                 return (false, null, "Invalid login attempt.");
             }
 
             // Tạo token JWT
-            var token = _jwtTokenService.GenerateJwtToken(user);
+            var token = _jwtTokenService.GenerateToken(user.Username);
             return (true, token, null);
         }
 
@@ -66,6 +67,16 @@ namespace API.Server.Services
         public async Task LogoutAsync()
         {
             // Nếu bạn muốn thực hiện logic đăng xuất, hãy thêm vào đây
+        }
+
+        public Task<AccountEmp> ValidateCredentials(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddAsync(AccountEmp accountEmp)
+        {
+            throw new NotImplementedException();
         }
     }
 }

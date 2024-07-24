@@ -1,37 +1,58 @@
+using Microsoft.AspNetCore.Mvc; // Sử dụng cho ControllerBase
+using API.Models; // Namespace chứa các DTOs
+using API.Services; // Namespace chứa các dịch vụ
+using AutoMapper;
 using API.Server.DTOs.Account;
+using API.DTOs.Account;
 using API.Server.Models;
-using Microsoft.AspNetCore.Mvc;
+using API.Server.Interfaces; // Sử dụng cho AutoMapper
 
-[Route("api/[controller]")]
-[ApiController]
-public class AuthController : ControllerBase
+namespace API.Controllers
 {
-    private readonly JwtTokenService _jwtTokenService;
-
-    // Inject JwtTokenService qua constructor
-    public AuthController(JwtTokenService jwtTokenService)
+    [Route("api/[controller]")] // Định tuyến cho API
+    [ApiController] // Đánh dấu lớp là API Controller
+    public class AuthController : ControllerBase
     {
-        _jwtTokenService = jwtTokenService;
-    }
+        private readonly IAccountEmpService _accountEmpService;
+        private readonly IJwtTokenService _jwtTokenService;
+        private readonly IMapper _mapper;
 
-    [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginDto model)
-    {
-        var user = AuthenticateUser(model); // Xác thực người dùng
-
-        if (user == null)
+        public AuthController(IAccountEmpService accountEmpService, IJwtTokenService jwtTokenService, IMapper mapper)
         {
-            return Unauthorized(); // Trả về Unauthorized nếu xác thực thất bại
+            _accountEmpService = accountEmpService;
+            _jwtTokenService = jwtTokenService;
+            _mapper = mapper;
         }
 
-        var token = _jwtTokenService.GenerateJwtToken(user); // Tạo JWT token
-        return Ok(new { Token = token }); // Trả về token cho client
-    }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            // Xác thực thông tin đăng nhập
+            var accountEmp = await _accountEmpService.ValidateCredentials(loginDto.UserName, loginDto.Password);
+            if (accountEmp == null)
+            {
+                return Unauthorized(); // Trả về 401 nếu thông tin đăng nhập không hợp lệ
+            }
 
-    private AccountEmp AuthenticateUser(LoginDto model)
-    {
-        // Kiểm tra thông tin đăng nhập từ cơ sở dữ liệu hoặc nguồn dữ liệu khác
-        // Trả về đối tượng AccountEmp nếu thông tin hợp lệ, ngược lại trả về null
-        return new AccountEmp();
+            // Tạo JWT token
+            var token = _jwtTokenService.GenerateToken(accountEmp.Username);
+            return Ok(new { Token = token }); // Trả về token cho client
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(CreateAccountEmpDto createAccountEmpDto)
+        {
+            // Chuyển đổi DTO sang model
+            var accountEmp = _mapper.Map<AccountEmp>(createAccountEmpDto);
+            await _accountEmpService.AddAsync(accountEmp); // Thêm tài khoản mới
+            return Ok(); // Trả về kết quả thành công
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            // Thực hiện các thao tác cần thiết để đăng xuất người dùng (thường là phía client)
+            return Ok(); // Trả về kết quả thành công
+        }
     }
 }

@@ -1,42 +1,48 @@
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using API.Server.Models;
-using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt; // Sử dụng cho việc tạo JWT
+using System.Security.Claims; // Sử dụng cho Claims trong JWT
+using System.Text; // Sử dụng cho Encoding
+using Microsoft.IdentityModel.Tokens; // Sử dụng cho Token Validation Parameters
 
-public class JwtTokenService
+namespace API.Services
 {
-    private readonly string _secretKey;
-    private readonly string _issuer;
-    private readonly string _audience;
-
-    // Constructor để khởi tạo các giá trị secret key, issuer và audience
-    public JwtTokenService(string secretKey, string issuer, string audience)
+    // Implement của dịch vụ JWT
+    public class JwtTokenService : IJwtTokenService
     {
-        _secretKey = secretKey;
-        _issuer = issuer;
-        _audience = audience;
-    }
+        private readonly string _secretKey;
+        private readonly string _issuer;
+        private readonly string _audience;
 
-    // Phương thức để tạo JWT token
-    public string GenerateJwtToken(AccountEmp user)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_secretKey); // Mã hóa secret key thành mảng byte
-        var tokenDescriptor = new SecurityTokenDescriptor
+        public JwtTokenService(string secretKey, string issuer, string audience)
         {
-            Subject = new ClaimsIdentity(new Claim[]
+            _secretKey = secretKey;
+            _issuer = issuer;
+            _audience = audience;
+        }
+
+        public string GenerateToken(string username)
+        {
+            // Tạo các claims cho token
+            var claims = new[]
             {
-                new Claim(ClaimTypes.Name, user.Username), // Thêm claim cho Username
-                new Claim(ClaimTypes.Role, user.Role.RoleName) // Thêm claim cho Role
-            }),
-            Expires = DateTime.UtcNow.AddHours(1), // Đặt thời gian hết hạn cho token
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature), // Thiết lập cách thức mã hóa và ký token
-            Issuer = _issuer,
-            Audience = _audience
-        };
-        var token = tokenHandler.CreateToken(tokenDescriptor); // Tạo token
-        return tokenHandler.WriteToken(token); // Trả về token dưới dạng chuỗi
+                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            // Tạo khóa ký
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            // Tạo token
+            var token = new JwtSecurityToken(
+                issuer: _issuer,
+                audience: _audience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
+
+            // Trả về token dưới dạng chuỗi
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }
