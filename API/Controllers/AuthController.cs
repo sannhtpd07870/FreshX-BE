@@ -24,7 +24,9 @@ namespace API.Server.Controllers
         }
 
         // API endpoint cho đăng nhập người dùng
+
         [HttpPost("login")]
+        // Endpoint cho đăng nhập người dùng
         public async Task<IActionResult> Login(LoginEmpDto loginDto)
         {
             // Xác thực thông tin đăng nhập
@@ -35,10 +37,20 @@ namespace API.Server.Controllers
             }
 
             // Tạo JWT token
-            var token = _jwtTokenService.GenerateToken(accountEmp.Email);
-            return Ok(new { Token = token }); // Trả về token cho client
-        }
+            var token = _jwtTokenService.GenerateToken(accountEmp);
 
+            // Trả về thông tin người dùng và token
+            var userInfo = new
+            {
+                accountEmp.Id,
+                accountEmp.Email,
+                accountEmp.EmployeeId,
+                accountEmp.RoleId,
+                access_token = token
+            };
+
+            return Ok(userInfo); // Trả về thông tin người dùng và token cho client
+        }
         // API endpoint cho đăng ký người dùng mới
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterEmpDto registerDto)
