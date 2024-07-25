@@ -1,7 +1,10 @@
 using AutoMapper;
 using API.Server.Models;
+using API.DTOs.AccountEmp;
+using API.Server.DTOs.Account;
 using API.DTOs.Account;
 using API.Server.DTOs.RolesDTO;
+using API.Models;
 
 namespace API
 {
@@ -10,14 +13,27 @@ namespace API
     {
         public AutoMapperProfiles()
         {
-            CreateMap<AccountEmp, AccountEmpDto>(); // Chuyển đổi từ AccountEmp sang AccountEmpDto
-            CreateMap<CreateAccountEmpDto, AccountEmp>(); // Chuyển đổi từ CreateAccountEmpDto sang AccountEmp
-            CreateMap<UpdateAccountEmpDto, AccountEmp>();
+            // Chuyển đổi từ AccountEmp sang AccountEmpDto và ngược lại
+            CreateMap<AccountEmp, AccountEmpDto>().ReverseMap();
 
-
-            CreateMap<Role, RoleDto>(); // Chuyển đổi từ Role sang RoleDto
-            CreateMap<CreateRoleDto, Role>(); // Chuyển đổi từ CreateRoleDto sang Role
-            CreateMap<UpdateRoleDto, Role>();
+            // Chuyển đổi từ RegisterEmpDto sang AccountEmp và khởi tạo Employee với giá trị null
+            CreateMap<RegisterEmpDto, AccountEmp>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+                .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => new Employee
+                {
+                    Name = null,
+                    BirthDate = default,
+                    Gender = null,
+                    Address = null,
+                    Phone = null,
+                    Email = null,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    DeletedAt = null
+                }))
+                .ForMember(dest => dest.RoleId, opt => opt.Ignore()) // Bỏ qua RoleId để đặt mặc định
+                .ForMember(dest => dest.EmployeeId, opt => opt.Ignore()); // Bỏ qua EmployeeId để đặt từ Employee mới tạo
         }
     }
 }

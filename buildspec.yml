@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      dotnet: 8.0
+  pre_build:
+    commands:
+      - echo Restoring dependencies...
+      - dotnet restore repository.sln
+  build:
+    commands:
+      - echo Building the project...
+      - dotnet build repository.sln --configuration Release
+      - echo Publishing the project...
+      - dotnet publish repository.sln --configuration Release --output ./publish
+  post_build:
+    commands:
+      - echo Running tests...
+      - dotnet test repository.sln
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: 'publish'  # Đường dẫn đến thư mục xuất bản sau khi publish
+  discard-paths: yes

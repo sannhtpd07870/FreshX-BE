@@ -32,7 +32,7 @@ internal class Program
         var key = Encoding.ASCII.GetBytes(secretKey); // Mã hóa secret key thành mảng byte
 
         // Đăng ký JwtTokenService với DI container
-        builder.Services.AddSingleton<IJwtTokenService>(new JwtTokenService(secretKey, issuer, audience)); // Đăng ký JwtTokenService với các tham số cấu hình JWT
+        builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>(); // Đăng ký JwtTokenService với DI container
 
         // Register AutoMapper
         builder.Services.AddAutoMapper(typeof(Program).Assembly);
@@ -66,7 +66,7 @@ internal class Program
 
         // Register services and repositories
         builder.Services.AddScoped<IRoleService, RoleService>(); // Đăng ký dịch vụ AccountService
-        builder.Services.AddScoped<IAccountEmpService, AccountEmpervice>(); // Đăng ký dịch vụ AccountService
+        builder.Services.AddScoped<IAccountEmpService, AccountEmpService>(); // Đăng ký dịch vụ AccountService
 
         // Add controllers and Swagger
         builder.Services.AddControllers(); // Đăng ký các controller

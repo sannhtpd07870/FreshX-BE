@@ -1,3 +1,4 @@
+using API.DTOs.AccountEmp;
 using API.Server.DTOs.Account;
 using API.Server.Models;
 using System.Collections.Generic;
@@ -5,22 +6,16 @@ using System.Threading.Tasks;
 
 namespace API.Server.Interfaces
 {
-    // Định nghĩa interface cho dịch vụ tài khoản
     public interface IAccountEmpService
     {
-        // Phương thức để đăng ký tài khoản mới
-        Task<(bool Succeeded, string ErrorMessage)> RegisterAsync(RegisterDto registerDto);
+        Task<(bool Succeeded, string ErrorMessage)> RegisterAsync(RegisterEmpDto registerDto);
+        // Phương thức đăng nhập và trả về token JWT cùng với thông tin người dùng nếu thành công
+        Task<(bool Succeeded, object User, string ErrorMessage)> LoginAsync(LoginEmpDto loginDto);
 
-        // Phương thức để đăng nhập và trả về token JWT nếu thành công
-        Task<(bool Succeeded, string Token, string ErrorMessage)> LoginAsync(LoginDto loginDto);
-
-        // Phương thức để đăng xuất
         Task LogoutAsync();
-
-        // Phương thức xác thực thông tin đăng nhập
-        Task<AccountEmp> ValidateCredentials(string username, string password);
-
-        // Phương thức thêm tài khoản mới
+        Task<(bool Succeeded, string ErrorMessage)> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto);
+        Task<(bool Succeeded, string ErrorMessage)> ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
+        Task<AccountEmp> ValidateCredentials(string email, string password);
         Task AddAsync(AccountEmp accountEmp);
 
         // Phương thức GET tất cả người dùng
