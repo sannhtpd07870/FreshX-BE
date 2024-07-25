@@ -53,10 +53,10 @@ jobs:
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v21
       with:
-        aws_access_key: ${{AKIAXM2WGE6ZIWVJNMWK}}
-        aws_secret_key: ${{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}}
-        application_name: ${{FreshX}}
-        environment_name: ${{FreshX-env}}
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: ${{ secrets.EB_APP_NAME }}
+        environment_name: ${{ secrets.EB_ENV_NAME }}
         version_label: ${{ github.sha }}
-        region: ${{us-est-1}}
+        region: ${{ secrets.AWS_REGION }}
         zip_file: deploy.zip
