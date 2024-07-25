@@ -4,6 +4,7 @@ using API.DTOs.AccountEmp;
 using API.Server.DTOs.Account;
 using API.DTOs.Account;
 using API.Models;
+using API.DTOs.Appointment;
 
 namespace API
 {
@@ -33,6 +34,11 @@ namespace API
                 }))
                 .ForMember(dest => dest.RoleId, opt => opt.Ignore()) // Bỏ qua RoleId để đặt mặc định
                 .ForMember(dest => dest.EmployeeId, opt => opt.Ignore()); // Bỏ qua EmployeeId để đặt từ Employee mới tạo
+
+
+            CreateMap<Appointment, AppointmentDto>().ReverseMap();
+            CreateMap<CreateAppointmentDto, Appointment>();
+            CreateMap<UpdateAppointmentDto, Appointment>();
         }
     }
 }

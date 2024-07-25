@@ -5,7 +5,8 @@ using System.Text; // Sử dụng cho Encoding
 using API; // Namespace chứa ApplicationDbContext
 using API.Server.Interfaces; // Namespace chứa các interface dịch vụ
 using API.Server.Services;
-using API.Services; // Namespace chứa các implement dịch vụ
+using API.Services;
+using API.Interfaces; // Namespace chứa các implement dịch vụ
 
 internal class Program
 {
@@ -66,6 +67,8 @@ internal class Program
 
         // Register services and repositories
         builder.Services.AddScoped<IAccountEmpService, AccountEmpService>(); // Đăng ký dịch vụ AccountService
+        builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+
 
         // Add controllers and Swagger
         builder.Services.AddControllers(); // Đăng ký các controller
