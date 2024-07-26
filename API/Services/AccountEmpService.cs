@@ -155,5 +155,17 @@ namespace API.Server.Services
             _context.AccountEmp.Add(accountEmp);
             await _context.SaveChangesAsync();
         }
+
+        // Phương thức GET tất cả người dùng
+        public async Task<IEnumerable<AccountEmp>> GetAllAsync()
+        {
+            return await _context.AccountEmp.ToListAsync();
+        }
+
+        // Phương thức GET người dùng theo ID
+        public async Task<AccountEmp> GetByIdAsync(int id)
+        {
+            return await _context.AccountEmp.FindAsync(id);
+        }
     }
 }
