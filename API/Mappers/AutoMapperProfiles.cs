@@ -9,6 +9,8 @@ using API.DTOs.Appointment;
 using API.DTOs.MedicalRecord;
 using API.DTOs.Customer;
 using API.DTOs.Note;
+using API.DTOs.AccountCus;
+using API.DTOs.Feedback;
 
 namespace API
 {
@@ -26,6 +28,10 @@ namespace API
             CreateMap<MedicalRecord,UpdatingMedicalRecord>().ReverseMap();
             CreateMap<Customer,CustomerDto>().ReverseMap();
             CreateMap<Note,NoteDto>().ReverseMap(); 
+            CreateMap<AccountCus,AccountDto>().ReverseMap();
+            CreateMap<Feedback,AddingFeedback>().ReverseMap();
+            CreateMap<Feedback,UpdatingFeedbackDto>().ReverseMap();
+            CreateMap<Feedback, FeedbackDto>().ReverseMap();
 
             // Chuyển đổi từ RegisterEmpDto sang AccountEmp và khởi tạo Employee với giá trị null
             CreateMap<RegisterEmpDto, AccountEmp>()
