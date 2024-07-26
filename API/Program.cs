@@ -81,6 +81,7 @@ internal class Program
         builder.Services.AddScoped<IChatMessageService, ChatMessageService>();                                                                     // Đăng ký dịch vụ ChatMessageService                                                                                                            // Đăng ký dịch vụ ChatSessionService
         builder.Services.AddScoped<IChatSessionService, ChatSessionService>();
         builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+        builder.Services.AddScoped<IAccountCusService, AccountCusService>();
 
 
         builder.Services.AddScoped<IMedicalRecordService, MedicalRecordService>(); // MedicalRecordService
@@ -97,18 +98,16 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer(); // Thêm API Explorer cho Swagger
         builder.Services.AddSwaggerGen(); // Thêm Swagger để tạo tài liệu API
 
-        // Configure CORS policy
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowReactApp", // Đặt tên chính sách CORS
-                builder => builder
-                    .WithOrigins("http://localhost:5173") // Cho phép yêu cầu từ localhost:5173 (ứng dụng React)
-                    .AllowAnyHeader() // Cho phép mọi header
-                    .AllowAnyMethod() // Cho phép mọi phương thức (GET, POST, PUT, DELETE, v.v.)
-                    .AllowCredentials()); // Cho phép gửi thông tin xác thực (cookies, headers)
-        });
        
+
         var app = builder.Build(); // Xây dựng ứng dụng
+
+        app.UseCors(builder =>
+        {
+            builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader(); // Cấu hình CORS
+        }); // Kích hoạt chính sách CORS
 
         // Configure middleware pipeline
         if (app.Environment.IsDevelopment())
@@ -128,7 +127,7 @@ internal class Program
         app.UseStaticFiles(); // Phục vụ các tệp tĩnh
         app.UseRouting(); // Kích hoạt định tuyến
 
-        app.UseCors("AllowReactApp"); // Kích hoạt chính sách CORS
+
 
         app.UseAuthentication(); // Kích hoạt middleware xác thực
         app.UseAuthorization(); // Kích hoạt middleware phân quyền
