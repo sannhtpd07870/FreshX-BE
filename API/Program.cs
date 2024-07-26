@@ -12,7 +12,8 @@ using API.Interfaces; // Namespace chứa các implement dịch vụ
 using API.Interfaces;
 using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
 using API.Interfaces;
-using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
+using System.Text.Json.Serialization;
+using SendGrid.Helpers.Mail; // Namespace chứa các implement dịch vụ
 
 internal class Program
 {
@@ -106,7 +107,7 @@ internal class Program
                     .AllowAnyMethod() // Cho phép mọi phương thức (GET, POST, PUT, DELETE, v.v.)
                     .AllowCredentials()); // Cho phép gửi thông tin xác thực (cookies, headers)
         });
-
+       
         var app = builder.Build(); // Xây dựng ứng dụng
 
         // Configure middleware pipeline
@@ -121,6 +122,7 @@ internal class Program
             app.UseHsts(); // Sử dụng HSTS trong môi trường sản xuất
         }
         app.UseSwagger(); // Sử dụng Swagger
+       
         app.UseSwaggerUI(); // Sử dụng giao diện Swagger UI
         app.UseHttpsRedirection(); // Chuyển hướng các yêu cầu HTTP sang HTTPS
         app.UseStaticFiles(); // Phục vụ các tệp tĩnh
