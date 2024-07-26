@@ -19,9 +19,9 @@ namespace API.Services
 
         public ChatMessageService(ApplicationDbContext dbContext, IMapper objectMapper, IHubContext<ChatHub> hubContext)
         {
-            _dbContext = dbContext;
-            _objectMapper = objectMapper;
-            _hubContext = hubContext;
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _objectMapper = objectMapper ?? throw new ArgumentNullException(nameof(objectMapper));
+            _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace API.Services
         }
 
         /// <summary>
-        /// Tạo mới tin nhắn chat và phát tin nhắn qua SignalR
+        /// Tạo tin nhắn chat mới
         /// </summary>
         public async Task<(bool Succeeded, string ErrorMessage)> CreateAsync(CreateChatMessageDto createDto)
         {
