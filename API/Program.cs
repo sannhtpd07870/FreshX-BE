@@ -5,7 +5,9 @@ using System.Text; // Sử dụng cho Encoding
 using API; // Namespace chứa ApplicationDbContext
 using API.Server.Interfaces; // Namespace chứa các interface dịch vụ
 using API.Server.Services;
-using API.Services; // Namespace chứa các implement dịch vụ
+using API.Services;
+using API.Interfaces;
+using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
 
 internal class Program
 {
@@ -39,6 +41,7 @@ internal class Program
 
 
         builder.Services.AddControllers(); // Đăng ký các controller
+        
 
         // Cấu hình xác thực JWT
         builder.Services.AddAuthentication(options =>
@@ -66,6 +69,14 @@ internal class Program
 
         // Register services and repositories
         builder.Services.AddScoped<IAccountEmpService, AccountEmpService>(); // Đăng ký dịch vụ AccountService
+        
+        builder.Services.AddScoped<IMedicalRecordService,MedicalRecordService>(); // MedicalRecordService
+                                                                                  //Đoạn mã trên cấu hình các tùy chọn serialize JSON cho ứng dụng ASP.NET Core(khó hiểu quá thì copy tra chat nhé ae) 
+        builder.Services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            options.JsonSerializerOptions.WriteIndented = true;
+        });
 
         // Add controllers and Swagger
         builder.Services.AddControllers(); // Đăng ký các controller
