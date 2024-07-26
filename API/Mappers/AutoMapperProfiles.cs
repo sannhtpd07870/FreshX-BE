@@ -1,9 +1,9 @@
 using AutoMapper;
 using API.Server.Models;
-using API.DTOs.AccountEmp;
 using API.Server.DTOs.Account;
 using API.DTOs.Account;
 using API.Models;
+using API.DTOs.Chat;
 
 namespace API
 {
@@ -33,6 +33,12 @@ namespace API
                 }))
                 .ForMember(dest => dest.RoleId, opt => opt.Ignore()) // Bỏ qua RoleId để đặt mặc định
                 .ForMember(dest => dest.EmployeeId, opt => opt.Ignore()); // Bỏ qua EmployeeId để đặt từ Employee mới tạo
+
+
+            CreateMap<ChatMessage, ChatMessageDto>().ReverseMap();
+            CreateMap<CreateChatMessageDto, ChatMessage>();
+            CreateMap<ChatSession, ChatSessionDto>().ReverseMap();
+            CreateMap<CreateChatSessionDto, ChatSession>();
         }
     }
 }

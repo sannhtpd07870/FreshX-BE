@@ -1,5 +1,7 @@
 namespace API.Hubs
 {
+    using API.DTOs.Chat;
+    using API.Interfaces;
     using Microsoft.AspNetCore.SignalR;
 
 
