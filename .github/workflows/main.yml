@@ -8,30 +8,34 @@ on:
   pull_request:
     branches:
       - main
+env:
+  AZURE_WEBAPP_NAME: current-time-service
+  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0.x'
-
-    - name: Restore
-      run: dotnet restore ./API.sln
-    - name: Install dependencies
-      run: dotnet restore
-
-    - name: Build
-      run: dotnet build ./API.sln --configuration Release --no-restore
-
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-    - name: Publish
-      run: dotnet publish ./API.sln --configuration Release --no-build
-  
+      - uses: actions/checkout@v3
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+          
+      - name: Restore
+        run: dotnet restore ./CurrentTimeService.sln
+        
+      - name: Build
+        run: dotnet build ./CurrentTimeService.sln --configuration Release --no-restore
+        
+      - name: Publish
+        run: dotnet publish ./CurrentTimeService.sln --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+        
+      - name: Deployment
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
