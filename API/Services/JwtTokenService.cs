@@ -2,6 +2,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt; // Sử dụng cho việc tạo JWT
 using System.Security.Claims; // Sử dụng cho Claims trong JWT
 using System.Text; // Sử dụng cho Encoding
+using API.Models;
 using API.Server.Models;
 using Microsoft.Extensions.Configuration; // Sử dụng để truy cập cấu hình
 using Microsoft.IdentityModel.Tokens; // Sử dụng cho Token Validation Parameters
@@ -49,6 +50,34 @@ namespace API.Services
 
             // Trả về token dưới dạng chuỗi
             return new JwtSecurityTokenHandler().WriteToken(response);
+        }
+
+        // Tạo token JWT với thông tin khách hàng
+        public string GenerateToken(AccountCus accountCus)
+        {
+            // Tạo các claims cho token
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, accountCus.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("CustomerId", accountCus.CustomerId.ToString()),
+                new Claim("Email", accountCus.Email)
+            };
+
+            // Tạo khóa ký
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            // Tạo token
+            var token = new JwtSecurityToken(
+                issuer: _issuer,
+                audience: _audience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
+
+            // Trả về token dưới dạng chuỗi
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
