@@ -6,7 +6,10 @@ using API; // Namespace chứa ApplicationDbContext
 using API.Server.Interfaces; // Namespace chứa các interface dịch vụ
 using API.Server.Services;
 using API.Services;
-using API.Interfaces; // Namespace chứa các implement dịch vụ
+using API.Interfaces;
+using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
+using API.Interfaces;
+using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
 
 internal class Program
 {
@@ -33,13 +36,14 @@ internal class Program
         var key = Encoding.ASCII.GetBytes(secretKey); // Mã hóa secret key thành mảng byte
 
         // Đăng ký JwtTokenService với DI container
-        builder.Services.AddSingleton<IJwtTokenService>(new JwtTokenService(secretKey, issuer, audience)); // Đăng ký JwtTokenService với các tham số cấu hình JWT
+        builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>(); // Đăng ký JwtTokenService với DI container
 
         // Register AutoMapper
         builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 
         builder.Services.AddControllers(); // Đăng ký các controller
+        
 
         // Cấu hình xác thực JWT
         builder.Services.AddAuthentication(options =>
@@ -66,9 +70,18 @@ internal class Program
         builder.Services.AddHttpClient(); // Đăng ký HttpClient cho DI container
 
         // Register services and repositories
+        builder.Services.AddScoped<IRoleService, RoleService>(); // Đăng ký dịch vụ AccountService
         builder.Services.AddScoped<IAccountEmpService, AccountEmpService>(); // Đăng ký dịch vụ AccountService
         builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
+        
+        builder.Services.AddScoped<IMedicalRecordService,MedicalRecordService>(); // MedicalRecordService
+                                                                                  //Đoạn mã trên cấu hình các tùy chọn serialize JSON cho ứng dụng ASP.NET Core(khó hiểu quá thì copy tra chat nhé ae) 
+        builder.Services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            options.JsonSerializerOptions.WriteIndented = true;
+        });
 
         // Add controllers and Swagger
         builder.Services.AddControllers(); // Đăng ký các controller
