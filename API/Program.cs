@@ -5,13 +5,16 @@ using System.Text; // Sử dụng cho Encoding
 using API; // Namespace chứa ApplicationDbContext
 using API.Server.Interfaces; // Namespace chứa các interface dịch vụ
 using API.Server.Services;
-using API.Services; // Namespace chứa các implement dịch vụ
+using API.Services;
+using API.Hubs; // Namespace chứa các implement dịch vụ
 
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        // Cấu hình SignalR
+        builder.Services.AddSignalR();
 
         // Set up configuration
         builder.Configuration.AddJsonFile("appsettings.json"); // Đọc cấu hình từ appsettings.json
@@ -111,6 +114,8 @@ internal class Program
         {
             endpoints.MapControllers(); // Định tuyến đến các controller
         });
+        // Cấu hình SignalR
+        app.MapHub<ChatHub>("/chathub");
 
         app.Run(); // Chạy ứng dụng
     }
