@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - main
-      - 'API/*'
+      - 'releases/*'
   pull_request:
     branches:
       - main
 env:
-  AZURE_WEBAPP_NAME: current-time-service
+  AZURE_WEBAPP_NAME: freshx
   AZURE_WEBAPP_PACKAGE_PATH: "./publish"
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '6.0.x'
           
       - name: Restore
         run: dotnet restore ./API.sln
@@ -32,7 +32,10 @@ jobs:
         
       - name: Publish
         run: dotnet publish ./API.sln --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
-        
+      
+      - name: List publish directory
+        run: ls -R ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
       - name: Deployment
         uses: azure/webapps-deploy@v2
         with:
