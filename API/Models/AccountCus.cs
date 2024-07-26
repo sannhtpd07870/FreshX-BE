@@ -10,6 +10,7 @@ namespace API.Models
         public DateTime? DeletedAt { get; set; }
         public int? CustomerId { get; set; }
         public Customer Customer { get; set; }
+        public ICollection<Feedback> Feebacks { get; set;}
     }
 
 }

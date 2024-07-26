@@ -246,6 +246,36 @@ namespace API.Migrations
                     b.ToTable("Exercise");
                 });
 
+            modelBuilder.Entity("API.Models.Feedback", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("Feedback");
+                });
+
             modelBuilder.Entity("API.Models.Insurance", b =>
                 {
                     b.Property<int>("Id")
@@ -484,6 +514,15 @@ namespace API.Migrations
                     b.Navigation("Diagnosis");
                 });
 
+            modelBuilder.Entity("API.Models.Feedback", b =>
+                {
+                    b.HasOne("API.Models.AccountCus", "AccountCus")
+                        .WithMany("Feebacks")
+                        .HasForeignKey("AccountId");
+
+                    b.Navigation("AccountCus");
+                });
+
             modelBuilder.Entity("API.Models.Insurance", b =>
                 {
                     b.HasOne("API.Models.Customer", "Customer")
@@ -541,6 +580,11 @@ namespace API.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("API.Models.AccountCus", b =>
+                {
+                    b.Navigation("Feebacks");
                 });
 
             modelBuilder.Entity("API.Models.Customer", b =>

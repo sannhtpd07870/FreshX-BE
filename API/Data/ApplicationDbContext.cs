@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using API.Models;
 using API.Server.Models;
+using NuGet.Protocol;
 
 namespace API
 {
@@ -23,6 +24,7 @@ namespace API
         public DbSet<Note> Note { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<Symptom> Symptom { get; set; }
+        public DbSet<Feedback> Feedback { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -62,7 +64,6 @@ namespace API
                 .HasOne(ap => ap.Employee)
                 .WithMany(e => e.Appointments)
                 .HasForeignKey(ap => ap.EmployeeId);
-
             // DiagnosisSymptom configuration
             modelBuilder.Entity<DiagnosisSymptom>()
                 .HasKey(ds => new { ds.DiagnosisId, ds.SymptomId });
@@ -111,6 +112,9 @@ namespace API
                 .HasMany(s => s.DiagnosisSymptoms)
                 .WithOne(ds => ds.Symptom)
                 .HasForeignKey(ds => ds.SymptomId);
+            //Feedback
+            modelBuilder.Entity<Feedback>().HasOne(f => f.AccountCus).WithMany(a => a.Feebacks).
+                HasForeignKey(a => a.AccountId);        
         }
     }
 }

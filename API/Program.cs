@@ -72,6 +72,7 @@ internal class Program
         
         builder.Services.AddScoped<IMedicalRecordService,MedicalRecordService>(); // MedicalRecordService
                                                                                   //Đoạn mã trên cấu hình các tùy chọn serialize JSON cho ứng dụng ASP.NET Core(khó hiểu quá thì copy tra chat nhé ae) 
+        builder.Services.AddScoped<IFeedbackService, FeedbackService>();
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
