@@ -6,6 +6,9 @@ using API; // Namespace chứa ApplicationDbContext
 using API.Server.Interfaces; // Namespace chứa các interface dịch vụ
 using API.Server.Services;
 using API.Services;
+using API.Hubs;
+using API.Interfaces; // Namespace chứa các implement dịch vụ
+using API.Interfaces; // Namespace chứa các implement dịch vụ
 using API.Interfaces;
 using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
 using API.Interfaces;
@@ -16,6 +19,8 @@ internal class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        // Cấu hình SignalR
+        builder.Services.AddSignalR();
 
         // Set up configuration
         builder.Configuration.AddJsonFile("appsettings.json"); // Đọc cấu hình từ appsettings.json
@@ -43,7 +48,7 @@ internal class Program
 
 
         builder.Services.AddControllers(); // Đăng ký các controller
-        
+
 
         // Cấu hình xác thực JWT
         builder.Services.AddAuthentication(options =>
@@ -72,11 +77,13 @@ internal class Program
         // Register services and repositories
         builder.Services.AddScoped<IRoleService, RoleService>(); // Đăng ký dịch vụ AccountService
         builder.Services.AddScoped<IAccountEmpService, AccountEmpService>(); // Đăng ký dịch vụ AccountService
+        builder.Services.AddScoped<IChatMessageService, ChatMessageService>();                                                                     // Đăng ký dịch vụ ChatMessageService                                                                                                            // Đăng ký dịch vụ ChatSessionService
+        builder.Services.AddScoped<IChatSessionService, ChatSessionService>();
         builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
-        
-        builder.Services.AddScoped<IMedicalRecordService,MedicalRecordService>(); // MedicalRecordService
-                                                                                  //Đoạn mã trên cấu hình các tùy chọn serialize JSON cho ứng dụng ASP.NET Core(khó hiểu quá thì copy tra chat nhé ae) 
+
+        builder.Services.AddScoped<IMedicalRecordService, MedicalRecordService>(); // MedicalRecordService
+                                                                                   //Đoạn mã trên cấu hình các tùy chọn serialize JSON cho ứng dụng ASP.NET Core(khó hiểu quá thì copy tra chat nhé ae) 
         builder.Services.AddScoped<IFeedbackService, FeedbackService>();
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
@@ -128,6 +135,8 @@ internal class Program
         {
             endpoints.MapControllers(); // Định tuyến đến các controller
         });
+        // Cấu hình SignalR
+        app.MapHub<ChatHub>("/chathub");
 
         app.Run(); // Chạy ứng dụng
     }

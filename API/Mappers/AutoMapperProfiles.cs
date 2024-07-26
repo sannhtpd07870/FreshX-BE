@@ -1,10 +1,10 @@
 using AutoMapper;
 using API.Server.Models;
-using API.DTOs.AccountEmp;
 using API.Server.DTOs.Account;
 using API.DTOs.Account;
 using API.Server.DTOs.RolesDTO;
 using API.Models;
+using API.DTOs.Chat;
 using API.DTOs.Appointment;
 using API.DTOs.MedicalRecord;
 using API.DTOs.Customer;
@@ -21,16 +21,16 @@ namespace API
         {
             // Chuyển đổi từ AccountEmp sang AccountEmpDto và ngược lại
             CreateMap<AccountEmp, AccountEmpDto>().ReverseMap();
-            
+
             //MedicalRecord
-            CreateMap<MedicalRecord,MedicalRecordDto>().ReverseMap();
-            CreateMap<MedicalRecord,AddingMedicalRecord>().ReverseMap();
-            CreateMap<MedicalRecord,UpdatingMedicalRecord>().ReverseMap();
-            CreateMap<Customer,CustomerDto>().ReverseMap();
-            CreateMap<Note,NoteDto>().ReverseMap(); 
-            CreateMap<AccountCus,AccountDto>().ReverseMap();
-            CreateMap<Feedback,AddingFeedback>().ReverseMap();
-            CreateMap<Feedback,UpdatingFeedbackDto>().ReverseMap();
+            CreateMap<MedicalRecord, MedicalRecordDto>().ReverseMap();
+            CreateMap<MedicalRecord, AddingMedicalRecord>().ReverseMap();
+            CreateMap<MedicalRecord, UpdatingMedicalRecord>().ReverseMap();
+            CreateMap<Customer, CustomerDto>().ReverseMap();
+            CreateMap<Note, NoteDto>().ReverseMap();
+            CreateMap<AccountCus, AccountDto>().ReverseMap();
+            CreateMap<Feedback, AddingFeedback>().ReverseMap();
+            CreateMap<Feedback, UpdatingFeedbackDto>().ReverseMap();
             CreateMap<Feedback, FeedbackDto>().ReverseMap();
 
             // Chuyển đổi từ RegisterEmpDto sang AccountEmp và khởi tạo Employee với giá trị null
@@ -53,6 +53,10 @@ namespace API
                 .ForMember(dest => dest.EmployeeId, opt => opt.Ignore()); // Bỏ qua EmployeeId để đặt từ Employee mới tạo
 
 
+            CreateMap<ChatMessage, ChatMessageDto>().ReverseMap();
+            CreateMap<CreateChatMessageDto, ChatMessage>();
+            CreateMap<ChatSession, ChatSessionDto>().ReverseMap();
+            CreateMap<CreateChatSessionDto, ChatSession>();
             CreateMap<Appointment, AppointmentDto>().ReverseMap();
             CreateMap<CreateAppointmentDto, Appointment>();
             CreateMap<UpdateAppointmentDto, Appointment>();

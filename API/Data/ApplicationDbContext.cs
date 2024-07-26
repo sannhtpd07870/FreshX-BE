@@ -24,6 +24,9 @@ namespace API
         public DbSet<Note> Note { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<Symptom> Symptom { get; set; }
+        // Thêm DbSet cho ChatMessage và ChatSession
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<ChatSession> ChatSessions { get; set; }
         public DbSet<Feedback> Feedback { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -112,9 +115,27 @@ namespace API
                 .HasMany(s => s.DiagnosisSymptoms)
                 .WithOne(ds => ds.Symptom)
                 .HasForeignKey(ds => ds.SymptomId);
+
+            // Cấu hình mối quan hệ giữa ChatMessage và ChatSession
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(cm => cm.ChatSession)
+                .WithMany(cs => cs.ChatMessages)
+                .HasForeignKey(cm => cm.ChatSessionId);
+
+            // Cấu hình các thuộc tính khác cho ChatMessage nếu cần
+            modelBuilder.Entity<ChatMessage>()
+                .Property(cm => cm.MessageType)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            // Cấu hình các thuộc tính khác cho ChatSession nếu cần
+            modelBuilder.Entity<ChatSession>()
+                .HasMany(cs => cs.ChatMessages)
+                .WithOne(cm => cm.ChatSession)
+                .HasForeignKey(cm => cm.ChatSessionId);
             //Feedback
             modelBuilder.Entity<Feedback>().HasOne(f => f.AccountCus).WithMany(a => a.Feebacks).
-                HasForeignKey(a => a.AccountId);        
+                HasForeignKey(a => a.AccountId);
         }
     }
 }
