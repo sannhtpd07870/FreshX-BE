@@ -5,6 +5,7 @@ using API.Server.DTOs.Account;
 using API.DTOs.Account;
 using API.Server.DTOs.RolesDTO;
 using API.Models;
+using API.DTOs.Appointment;
 using API.DTOs.MedicalRecord;
 using API.DTOs.Customer;
 using API.DTOs.Note;
@@ -44,6 +45,11 @@ namespace API
                 }))
                 .ForMember(dest => dest.RoleId, opt => opt.Ignore()) // Bỏ qua RoleId để đặt mặc định
                 .ForMember(dest => dest.EmployeeId, opt => opt.Ignore()); // Bỏ qua EmployeeId để đặt từ Employee mới tạo
+
+
+            CreateMap<Appointment, AppointmentDto>().ReverseMap();
+            CreateMap<CreateAppointmentDto, Appointment>();
+            CreateMap<UpdateAppointmentDto, Appointment>();
         }
     }
 }

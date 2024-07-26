@@ -8,6 +8,8 @@ using API.Server.Services;
 using API.Services;
 using API.Interfaces;
 using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
+using API.Interfaces;
+using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
 
 internal class Program
 {
@@ -70,6 +72,8 @@ internal class Program
         // Register services and repositories
         builder.Services.AddScoped<IRoleService, RoleService>(); // Đăng ký dịch vụ AccountService
         builder.Services.AddScoped<IAccountEmpService, AccountEmpService>(); // Đăng ký dịch vụ AccountService
+        builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+
         
         builder.Services.AddScoped<IMedicalRecordService,MedicalRecordService>(); // MedicalRecordService
                                                                                   //Đoạn mã trên cấu hình các tùy chọn serialize JSON cho ứng dụng ASP.NET Core(khó hiểu quá thì copy tra chat nhé ae) 
