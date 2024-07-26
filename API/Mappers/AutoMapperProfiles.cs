@@ -28,7 +28,7 @@ namespace API
             CreateMap<MedicalRecord, UpdatingMedicalRecord>().ReverseMap();
             CreateMap<Customer, CustomerDto>().ReverseMap();
             CreateMap<Note, NoteDto>().ReverseMap();
-            CreateMap<AccountCus, AccountDto>().ReverseMap();
+
             CreateMap<Feedback, AddingFeedback>().ReverseMap();
             CreateMap<Feedback, UpdatingFeedbackDto>().ReverseMap();
             CreateMap<Feedback, FeedbackDto>().ReverseMap();
@@ -60,6 +60,9 @@ namespace API
             CreateMap<Appointment, AppointmentDto>().ReverseMap();
             CreateMap<CreateAppointmentDto, Appointment>();
             CreateMap<UpdateAppointmentDto, Appointment>();
+
+            CreateMap<AccountCus, AccountCusDto>();
+            CreateMap<CreateAccountCusDto, AccountCus>();
         }
     }
 }

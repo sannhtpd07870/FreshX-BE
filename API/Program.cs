@@ -80,6 +80,7 @@ internal class Program
         builder.Services.AddScoped<IChatMessageService, ChatMessageService>();                                                                     // Đăng ký dịch vụ ChatMessageService                                                                                                            // Đăng ký dịch vụ ChatSessionService
         builder.Services.AddScoped<IChatSessionService, ChatSessionService>();
         builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+        builder.Services.AddScoped<IAccountCusService, AccountCusService>();
 
 
         builder.Services.AddScoped<IMedicalRecordService, MedicalRecordService>(); // MedicalRecordService
