@@ -36,17 +36,18 @@ namespace API.Services
             return (true, null);
         }
 
-        public async Task<(bool Succeeded, string Token, string ErrorMessage)> LoginAsync(LoginCusDto loginDto)
+        public async Task<(bool Succeeded, string Token, int? CustomerId, string ErrorMessage)> LoginAsync(LoginCusDto loginDto)
         {
             var user = await _context.AccountCus.SingleOrDefaultAsync(u => u.Email == loginDto.Email);
 
+            // Kiểm tra thông tin đăng nhập
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
             {
-                return (false, null, "Invalid login attempt.");
+                return (false, null, null, "Invalid login attempt.");
             }
 
             var token = _jwtTokenService.GenerateToken(user);
-            return (true, token, null);
+            return (true, token, user.CustomerId, null);
         }
 
         public Task LogoutAsync()
