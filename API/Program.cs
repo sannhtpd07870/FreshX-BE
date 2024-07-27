@@ -17,6 +17,7 @@ using Quartz.Spi;
 using Quartz;
 using Quartz.Impl;
 using API.EmailAotu; // Namespace chứa các implement dịch vụ
+using SendGrid.Helpers.Mail; // Namespace chứa các implement dịch vụ
 
 internal class Program
 {
@@ -102,6 +103,7 @@ internal class Program
         builder.Services.AddSwaggerGen(); // Thêm Swagger để tạo tài liệu API
 
 
+
         // Add Quartz services
         builder.Services.AddSingleton<IJobFactory, SingletonJobFactory>();
         builder.Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
@@ -139,6 +141,7 @@ internal class Program
             app.UseHsts(); // Sử dụng HSTS trong môi trường sản xuất
         }
         app.UseSwagger(); // Sử dụng Swagger
+
         app.UseSwaggerUI(); // Sử dụng giao diện Swagger UI
         app.UseHttpsRedirection(); // Chuyển hướng các yêu cầu HTTP sang HTTPS
         app.UseStaticFiles(); // Phục vụ các tệp tĩnh

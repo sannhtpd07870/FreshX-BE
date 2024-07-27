@@ -30,17 +30,16 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginCusDto loginDto)
+        public async Task<IActionResult> Login(LoginCusDto loginDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var (succeeded, token, customerId, errorMessage) = await _accountCusService.LoginAsync(loginDto);
 
-            var (succeeded, token, errorMessage) = await _accountCusService.LoginAsync(loginDto);
+            if (!succeeded)
+            {
+                return BadRequest(new { errorMessage });
+            }
 
-            if (succeeded)
-                return Ok(new { Token = token });
-
-            return BadRequest(errorMessage);
+            return Ok(new { token, customerId });
         }
 
         [HttpPost("logout")]
