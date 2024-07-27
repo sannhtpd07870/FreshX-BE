@@ -12,7 +12,11 @@ using API.Interfaces; // Namespace chứa các implement dịch vụ
 using API.Interfaces;
 using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
 using API.Interfaces;
-using System.Text.Json.Serialization; // Namespace chứa các implement dịch vụ
+using System.Text.Json.Serialization;
+using Quartz.Spi;
+using Quartz;
+using Quartz.Impl;
+using API.EmailAotu; // Namespace chứa các implement dịch vụ
 
 internal class Program
 {
@@ -97,6 +101,22 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer(); // Thêm API Explorer cho Swagger
         builder.Services.AddSwaggerGen(); // Thêm Swagger để tạo tài liệu API
 
+
+        // Add Quartz services
+        builder.Services.AddSingleton<IJobFactory, SingletonJobFactory>();
+        builder.Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+        builder.Services.AddSingleton<CallApiJob>();
+        builder.Services.AddHostedService<QuartzHostedService>();
+
+        builder.Services.AddSingleton(new JobSchedule(
+            jobType: typeof(CallApiJob),
+            cronExpression: "0 17 13 * * ?" // Lịch trình gửi email lúc 17:30 hàng ngày
+        ));
+
+        builder.Services.AddSingleton(new JobSchedule(
+            jobType: typeof(CallApiJob),
+            cronExpression: "0 * * * * ?" // Lịch trình gửi email mỗi phút
+        ));
 
         var app = builder.Build(); // Xây dựng ứng dụng
 
